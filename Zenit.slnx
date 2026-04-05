@@ -1,5 +1,4 @@
 <Solution>
   <Project Path="Zenit.Core/Zenit.Core.csproj" />
-  <Project Path="Zenit.Tests/Zenit.Tests.csproj" />
   <Project Path="Zenit/Zenit.csproj" />
 </Solution>
