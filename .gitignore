@@ -1,0 +1,11 @@
+Lemon/
+
+.DS_Store
+
+**/bin/
+**/obj/
+**/TestResults/
+
+*.user
+*.suo
+*.swp

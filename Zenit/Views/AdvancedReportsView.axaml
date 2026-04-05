@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Zenit.Views.AdvancedReportsView"
+             x:CompileBindings="False">
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Builder de plantillas" FontSize="20" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Refresh" Command="{Binding BuilderRefreshCommand}"/>
+                        <Button Content="Nueva" Command="{Binding StartNewTemplateCommand}"/>
+                        <Button Content="Abrir" Command="{Binding OpenSelectedTemplateCommand}"/>
+                        <Button Content="Guardar" Command="{Binding SaveCurrentTemplateCommand}"/>
+                        <Button Content="Duplicar" Command="{Binding DuplicateCurrentTemplateCommand}"/>
+                        <Button Content="Eliminar" Command="{Binding DeleteCurrentTemplateCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Grid ColumnDefinitions="280,*" ColumnSpacing="16">
+                <Border Grid.Column="0" Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Plantillas" FontSize="18" FontWeight="SemiBold"/>
+                        <ListBox ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}" MinHeight="360"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Column="1" Spacing="16">
+                    <Border Classes="card">
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                            <StackPanel Grid.Row="0" Grid.Column="0" Spacing="6">
+                                <TextBlock Text="Nombre"/>
+                                <TextBox Text="{Binding ReportName}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Spacing="6">
+                                <TextBlock Text="Tipo"/>
+                                <ComboBox ItemsSource="{Binding ReportTypes}" SelectedItem="{Binding SelectedReportType}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="0" Spacing="6">
+                                <TextBlock Text="Source"/>
+                                <TextBox Text="{Binding Source}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+                                <TextBlock Text="Dataset activo"/>
+                                <TextBox Text="{Binding ActiveDatasetId}" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding BuilderMetadataSummary}" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Classes="card">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Columnas visibles" FontSize="18" FontWeight="SemiBold"/>
+                            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="12">
+                                <StackPanel Grid.Column="0" Spacing="8">
+                                    <TextBlock Text="Disponibles"/>
+                                    <TextBox Text="{Binding AvailableColumnSearch}" Watermark="Buscar"/>
+                                    <ListBox ItemsSource="{Binding FilteredAvailableTemplateColumns}"
+                                             SelectedItem="{Binding SelectedAvailableTemplateColumn}"
+                                             MinHeight="240"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                                    <Button Content="Agregar" Command="{Binding AddVisibleTemplateColumnsCommand}"/>
+                                    <Button Content="Quitar" Command="{Binding RemoveVisibleTemplateColumnsCommand}"/>
+                                    <Button Content="Subir" Command="{Binding MoveTemplateColumnUpCommand}"/>
+                                    <Button Content="Bajar" Command="{Binding MoveTemplateColumnDownCommand}"/>
+                                    <Button Content="Limpiar" Command="{Binding ClearSelectedTemplateColumnsCommand}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" Spacing="8">
+                                    <TextBlock Text="Seleccionadas"/>
+                                    <TextBox Text="{Binding SelectedColumnSearch}" Watermark="Buscar"/>
+                                    <ListBox ItemsSource="{Binding FilteredSelectedTemplateColumns}"
+                                             SelectedItem="{Binding SelectedTemplateColumn}"
+                                             MinHeight="240"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="{Binding BuilderColumnSummary}" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding BuilderColumnModelSummary}" TextWrapping="Wrap" Foreground="#6B6B5F"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Classes="card">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Reglas configuradas" FontSize="18" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding BuilderRulesSummary}" TextWrapping="Wrap"/>
+                            <ListBox ItemsSource="{Binding ConfiguredRules}" MinHeight="200"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

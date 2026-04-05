@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Zenit.Views.CustomReportRunnerView"
+             x:CompileBindings="False">
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+            <Border Classes="card" IsVisible="{Binding IsStatusOpen}">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding StatusTitle}" FontWeight="SemiBold" FontSize="18"/>
+                    <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Ejecucion de plantillas" FontSize="20" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Recargar" Command="{Binding ReloadCommand}"/>
+                        <Button Content="Recargar filtros" Command="{Binding ReloadFiltersCommand}"/>
+                        <Button Content="Ejecutar" Command="{Binding RunTemplateCommand}"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12" RowSpacing="12">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Plantilla"/>
+                            <ComboBox ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <TextBlock Text="Mes"/>
+                            <ComboBox ItemsSource="{Binding Months}" SelectedItem="{Binding SelectedMonth}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Año"/>
+                            <ComboBox ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Spacing="6">
+                            <TextBlock Text="Grupo"/>
+                            <ComboBox ItemsSource="{Binding GroupOptions}" SelectedItem="{Binding SelectedGroup}" IsEnabled="{Binding IsGroupAvailable}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBox Text="{Binding SelectedVendorsCsv}" Watermark="Vendedores CSV, ej: 018, 021"/>
+                    <TextBlock Text="{Binding TemplateSourceText}" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding TemplateColumnsText}" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding TemplateRulesText}" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding ResultSummary}" Foreground="#6B6B5F"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Vista previa de ejecución" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding ExecutionPreview}"
+                             AcceptsReturn="True"
+                             TextWrapping="NoWrap"
+                             FontFamily="Courier New"
+                             IsReadOnly="True"
+                             MinHeight="280"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Resultados de reglas" FontSize="18" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding RuleResults}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

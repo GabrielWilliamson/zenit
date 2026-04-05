@@ -1,0 +1,78 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Zenit.Views.SettingsView"
+             x:CompileBindings="False">
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+            <Border Classes="card">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding VersionDescription}" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding ThemeDescription}" Foreground="#6B6B5F"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Secretos locales" FontSize="20" FontWeight="SemiBold"/>
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                        <StackPanel Grid.Row="0" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Connection string"/>
+                            <TextBox Text="{Binding ConnectionString}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="Power BI Tenant Id"/>
+                            <TextBox Text="{Binding PowerBiTenantId}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Power BI Client Id"/>
+                            <TextBox Text="{Binding PowerBiClientId}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="WhatsApp API base URL"/>
+                            <TextBox Text="{Binding WhatsAppApiBaseUrl}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="COD_VEND column"/>
+                            <TextBox Text="{Binding PowerBiCodVendColumn}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="GRUPO column"/>
+                            <TextBox Text="{Binding PowerBiGrupoColumn}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="NOMVEN column"/>
+                            <TextBox Text="{Binding PowerBiNomVenColumn}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="WhatsApp send file path"/>
+                            <TextBox Text="{Binding WhatsAppSendFilePath}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Button Content="Guardar secretos" Command="{Binding SaveStartupSettingsCommand}" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding StartupSettingsStatus}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Workspace y dataset por defecto" FontSize="20" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Cargar opciones" Command="{Binding LoadPowerBiOptionsCommand}"/>
+                        <Button Content="Guardar defaults" Command="{Binding SavePowerBiDefaultsCommand}"/>
+                    </StackPanel>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Workspace"/>
+                            <ComboBox ItemsSource="{Binding WorkspaceOptions}" SelectedItem="{Binding SelectedWorkspace}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <TextBlock Text="Dataset"/>
+                            <ComboBox ItemsSource="{Binding DatasetOptions}" SelectedItem="{Binding SelectedDataset}"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding PowerBiSettingsStatus}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

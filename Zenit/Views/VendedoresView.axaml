@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Zenit.Views.VendedoresView"
+             x:CompileBindings="False">
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Mantenimiento de vendedores" FontSize="20" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button Content="Refrescar" Command="{Binding RefreshCommand}"/>
+                        <Button Content="Nuevo" Command="{Binding NewCommand}"/>
+                        <Button Content="Guardar" Command="{Binding SaveCommand}"/>
+                        <Button Content="Eliminar" Command="{Binding DeleteCommand}"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="12">
+                    <StackPanel Grid.Column="0" Spacing="6">
+                        <TextBlock Text="Nombre"/>
+                        <TextBox Text="{Binding SearchNombre}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="6">
+                        <TextBlock Text="Ruta"/>
+                        <TextBox Text="{Binding SearchRuta}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Spacing="6">
+                        <TextBlock Text="Grupo"/>
+                        <ComboBox ItemsSource="{Binding GrupoOptions}" SelectedItem="{Binding SelectedGrupo}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3" Spacing="6">
+                        <TextBlock Text="Subgrupo"/>
+                        <ComboBox ItemsSource="{Binding SubgrupoOptions}" SelectedItem="{Binding SelectedSubgrupo}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="320,*" ColumnSpacing="16">
+                <Border Grid.Column="0" Classes="card">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Listado" FontSize="18" FontWeight="SemiBold"/>
+                        <ListBox ItemsSource="{Binding Vendedores}" SelectedItem="{Binding SelectedVendedor}" MinHeight="420"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Classes="card">
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                        <StackPanel Grid.Row="0" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="COD_VEND"/>
+                            <TextBox Text="{Binding SelectedVendedor.COD_VEND}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="NOMVEN"/>
+                            <TextBox Text="{Binding SelectedVendedor.NOMVEN}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="COD_GRUPO"/>
+                            <TextBox Text="{Binding SelectedVendedor.COD_GRUPO}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="GRUPO"/>
+                            <TextBox Text="{Binding SelectedVendedor.GRUPO}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="COD_RUTA"/>
+                            <TextBox Text="{Binding SelectedVendedor.COD_RUTA}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="SUBGRUPO"/>
+                            <TextBox Text="{Binding SelectedVendedor.SUBGRUPO}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="0" Spacing="6">
+                            <TextBlock Text="SUB_GRUPO2"/>
+                            <TextBox Text="{Binding SelectedVendedor.SUB_GRUPO2}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="1" Spacing="6">
+                            <TextBlock Text="TELEFONO"/>
+                            <TextBox Text="{Binding SelectedVendedor.TELEFONO}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

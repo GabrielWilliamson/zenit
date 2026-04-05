@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Zenit.Views.HomeView"
+             x:CompileBindings="False">
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Estado del token" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding Status}" FontSize="16"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Content="Refrescar" Command="{Binding RefreshCommand}"/>
+                        <Button Content="Generar token" Command="{Binding GenerateTokenWithDeviceCodeCommand}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Configuracion activa de Power BI" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding PowerBiConfigStatus}" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding ActiveWorkspace, StringFormat='Workspace: {0}'}" IsVisible="{Binding IsPowerBiConfigured}"/>
+                    <TextBlock Text="{Binding ActiveDataset, StringFormat='Dataset: {0}'}" IsVisible="{Binding IsPowerBiConfigured}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Instrucciones de device code" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Al iniciar sesion, Microsoft mostrara aqui el codigo y la URL para autenticarte." Foreground="#6B6B5F" TextWrapping="Wrap"/>
+                    <TextBox Text="{Binding DeviceCodeInstructions}"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             IsReadOnly="True"
+                             MinHeight="180"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

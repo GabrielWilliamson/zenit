@@ -1,0 +1,75 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:CompileBindings="False"
+        d:DesignWidth="1440"
+        d:DesignHeight="920"
+        x:Class="Zenit.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="{Binding WindowTitle}"
+        Width="1440"
+        Height="920"
+        MinWidth="1180"
+        MinHeight="760"
+        Background="#F6F2E8">
+    <Window.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="#FFFDFC"/>
+            <Setter Property="BorderBrush" Value="#E5DCCD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="18"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="280,*">
+        <Border Background="#EFE8D9" Padding="24" BorderBrush="#DDD0B8" BorderThickness="0,0,1,0">
+            <DockPanel LastChildFill="True">
+                <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,24">
+                    <TextBlock Text="Zenit" FontSize="30" FontWeight="Bold" Foreground="#2F4D3E"/>
+                    <TextBlock Text="Migracion de Lemon a Avalonia" Foreground="#6B6B5F"/>
+                </StackPanel>
+
+                <ListBox ItemsSource="{Binding NavigationItems}"
+                         SelectedItem="{Binding SelectedPage}"
+                         BorderThickness="0"
+                         Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Classes="card" Margin="0,0,0,10">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="16"/>
+                                    <TextBlock Text="{Binding Subtitle}" Foreground="#6B6B5F" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto,*">
+            <Border Background="#F6F2E8" Padding="28,24,28,18" BorderBrush="#DDD0B8" BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="{Binding CurrentPageTitle}" FontSize="28" FontWeight="Bold" Foreground="#2C2A26"/>
+                        <TextBlock Text="{Binding CurrentPageSubtitle}" Foreground="#6B6B5F"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="1"
+                               Text="Cargando..."
+                               IsVisible="{Binding IsPageLoading}"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"
+                               Foreground="#2F4D3E"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Margin="24" Classes="card">
+                <ContentControl Content="{Binding CurrentPage}"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
