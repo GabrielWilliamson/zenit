@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "avalonia-mvvm": {
+      "source": "abdssamie/quater",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/avalonia-mvvm/SKILL.md",
+      "computedHash": "ad553846fa1c924be3b135c8a1910f9af97ac11b42a29e2d31786b350c4ea12e"
+    },
+    "csharp-async": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/csharp-async/SKILL.md",
+      "computedHash": "e889958419757528e43fb674607d13fffe331a6673cfcef2b0ab8ff9fb569bb8"
+    }
+  }
+}

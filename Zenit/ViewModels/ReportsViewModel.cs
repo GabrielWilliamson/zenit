@@ -16,7 +16,6 @@ using Zenit.Infrastructure.Configuration;
 using Zenit.Infrastructure.Logging;
 using Zenit.Models;
 using Zenit.Services;
-using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
 using System.IO;
 
@@ -119,7 +118,7 @@ public partial class ReportsViewModel : ObservableRecipient
 
     // Estado UI (InfoBar)
     [ObservableProperty] private bool isStatusOpen;
-    [ObservableProperty] private InfoBarSeverity statusSeverity = InfoBarSeverity.Informational;
+    [ObservableProperty] private StatusSeverity statusSeverity = StatusSeverity.Informational;
     [ObservableProperty] private string statusTitle = string.Empty;
     [ObservableProperty] private string statusMessage = string.Empty;
     [ObservableProperty] private string whatsAppPhoneNumber = string.Empty;
@@ -268,7 +267,7 @@ public partial class ReportsViewModel : ObservableRecipient
             ShowInfo(
                 "Dataset no seleccionado",
                 "Configura DefaultWorkspaceId y DefaultDatasetId en Settings antes de ejecutar reportes.",
-                InfoBarSeverity.Warning);
+                StatusSeverity.Warning);
 
             return;
         }
@@ -277,7 +276,7 @@ public partial class ReportsViewModel : ObservableRecipient
         DatasetId = _selectionState.SelectedDataset.Id;
 
         // Limpia mensaje si estaba en warning por dataset
-        if (StatusSeverity == InfoBarSeverity.Warning && StatusTitle.Contains("Dataset", StringComparison.OrdinalIgnoreCase))
+        if (StatusSeverity == StatusSeverity.Warning && StatusTitle.Contains("Dataset", StringComparison.OrdinalIgnoreCase))
             IsStatusOpen = false;
     }
 
@@ -359,12 +358,12 @@ public partial class ReportsViewModel : ObservableRecipient
 
             _filtersLoadedForDatasetId = DatasetId;
 
-            ShowInfo("Filtros cargados", "COD_VEND y GRUPO se cargaron desde Power BI (sin inventar tipos).", InfoBarSeverity.Success);
+            ShowInfo("Filtros cargados", "COD_VEND y GRUPO se cargaron desde Power BI (sin inventar tipos).", StatusSeverity.Success);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error cargando filtros (COD_VEND / GRUPO)");
-            ShowInfo("Error cargando filtros", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error cargando filtros", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -420,16 +419,16 @@ public partial class ReportsViewModel : ObservableRecipient
             await LoadCurrentPageAsync(ct);
 
             var extra = mayoristas ? " (Mayoristas detectado)" : string.Empty;
-            ShowInfo("Reporte generado", $"Filtrado por {SelectedMonth.Name} {SelectedYear}.{extra}", InfoBarSeverity.Success);
+            ShowInfo("Reporte generado", $"Filtrado por {SelectedMonth.Name} {SelectedYear}.{extra}", StatusSeverity.Success);
         }
         catch (OperationCanceledException)
         {
-            ShowInfo("Cancelado", "La ejecución del reporte fue cancelada.", InfoBarSeverity.Informational);
+            ShowInfo("Cancelado", "La ejecución del reporte fue cancelada.", StatusSeverity.Informational);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error ejecutando reporte {ReportKey}", SelectedReport?.Key);
-            ShowInfo("Error", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -454,7 +453,7 @@ public partial class ReportsViewModel : ObservableRecipient
             ShowInfo(
                 "Selecciona vendedores",
                 "Para exportar a PDF, selecciona 1 o más COD_VEND. (Se generará 1 PDF por vendedor).",
-                InfoBarSeverity.Warning);
+                StatusSeverity.Warning);
             return;
         }
 
@@ -511,16 +510,16 @@ public partial class ReportsViewModel : ObservableRecipient
             ShowInfo(
                 "PDF generado",
                 $"Se generaron {outputs.Count} PDF en Descargas.\n" + string.Join("\n", outputs.Select(Path.GetFileName)),
-                InfoBarSeverity.Success);
+                StatusSeverity.Success);
         }
         catch (OperationCanceledException)
         {
-            ShowInfo("Cancelado", "La exportación a PDF fue cancelada.", InfoBarSeverity.Informational);
+            ShowInfo("Cancelado", "La exportación a PDF fue cancelada.", StatusSeverity.Informational);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error exportando PDF");
-            ShowInfo("Error", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -549,12 +548,12 @@ public partial class ReportsViewModel : ObservableRecipient
             ShowInfo(
                 "Mensaje enviado",
                 $"WhatsApp enviado a {WhatsAppPhoneNumber.Trim()}.",
-                InfoBarSeverity.Success);
+                StatusSeverity.Success);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error enviando mensaje WhatsApp");
-            ShowInfo("Error WhatsApp", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error WhatsApp", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -573,12 +572,12 @@ public partial class ReportsViewModel : ObservableRecipient
             ShowInfo(
                 "Archivo enviado",
                 $"Archivo enviado por WhatsApp a {WhatsAppFilePhoneNumber.Trim()}.",
-                InfoBarSeverity.Success);
+                StatusSeverity.Success);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error enviando archivo WhatsApp");
-            ShowInfo("Error WhatsApp", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error WhatsApp", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -802,7 +801,7 @@ public partial class ReportsViewModel : ObservableRecipient
         }
     }
 
-    private void ShowInfo(string title, string message, InfoBarSeverity severity)
+    private void ShowInfo(string title, string message, StatusSeverity severity)
     {
         StatusTitle = title;
         StatusMessage = message;

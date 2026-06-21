@@ -17,6 +17,7 @@ using Zenit.Infrastructure.Logging;
 using Zenit.Models;
 using Zenit.Properties;
 using Zenit.Services;
+using Zenit.Services.SalaryPlans;
 using Zenit.ViewModels;
 
 namespace Zenit.Infrastructure;
@@ -51,6 +52,7 @@ public sealed class AppBootstrapper
         Vendedores = BuildVendedoresViewModel();
         PowerBiQuery = BuildPowerBiQueryViewModel();
         SettingsViewModel = BuildSettingsViewModel();
+        SalaryPlansGeneratorViewModel = BuildSalaryPlansGeneratorViewModel();
     }
 
     public Zenit.Properties.Settings AppSettings { get; }
@@ -61,6 +63,7 @@ public sealed class AppBootstrapper
     public VendedoresViewModel Vendedores { get; }
     public PowerBiQueryViewModel PowerBiQuery { get; }
     public SettingsViewModel SettingsViewModel { get; }
+    public SalaryPlansGeneratorViewModel SalaryPlansGeneratorViewModel { get; }
 
     public MainWindowViewModel CreateMainWindowViewModel()
     {
@@ -114,6 +117,13 @@ public sealed class AppBootstrapper
                 Subtitle = "Secretos y defaults",
                 ViewModel = SettingsViewModel,
                 ActivateAsync = () => SettingsViewModel.InitializeAsync()
+            },
+            new NavigationItem
+            {
+                Title = "Planes de salario",
+                Subtitle = "Generar planes de salario",
+                ViewModel = SalaryPlansGeneratorViewModel,
+                ActivateAsync = () => Task.CompletedTask
             }
         });
     }
@@ -164,6 +174,11 @@ public sealed class AppBootstrapper
     private PowerBiQueryViewModel BuildPowerBiQueryViewModel()
     {
         return new PowerBiQueryViewModel(BuildExecuteQueryService());
+    }
+
+    private SalaryPlansGeneratorViewModel BuildSalaryPlansGeneratorViewModel()
+    {
+        return new SalaryPlansGeneratorViewModel(new PowerBiQueryService(BuildExecuteQueryService()));
     }
 
     private SettingsViewModel BuildSettingsViewModel()

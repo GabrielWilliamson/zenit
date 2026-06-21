@@ -9,7 +9,6 @@ using Zenit.Infrastructure.Logging;
 using Zenit.Models;
 using Zenit.Models.CustomReports;
 using Zenit.Services;
-using Microsoft.UI.Xaml.Controls;
 
 namespace Zenit.ViewModels;
 
@@ -48,7 +47,7 @@ public sealed partial class CustomReportRunnerViewModel : ObservableRecipient
     [ObservableProperty] private bool isBusy;
     [ObservableProperty] private IEnumerable? executionRows;
     [ObservableProperty] private bool isStatusOpen;
-    [ObservableProperty] private InfoBarSeverity statusSeverity = InfoBarSeverity.Informational;
+    [ObservableProperty] private StatusSeverity statusSeverity = StatusSeverity.Informational;
     [ObservableProperty] private string statusTitle = string.Empty;
     [ObservableProperty] private string statusMessage = string.Empty;
     [ObservableProperty] private string selectedVendorsCsv = string.Empty;
@@ -123,12 +122,12 @@ public sealed partial class CustomReportRunnerViewModel : ObservableRecipient
             ShowInfo(
                 "Plantillas listas",
                 "Selecciona una plantilla, define periodo y ejecuta para consumir datos reales desde la API.",
-                InfoBarSeverity.Success);
+                StatusSeverity.Success);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "No se pudo recargar el runner de plantillas.");
-            ShowInfo("Error", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -181,12 +180,12 @@ public sealed partial class CustomReportRunnerViewModel : ObservableRecipient
             ShowInfo(
                 "Plantilla ejecutada",
                 $"Se ejecutaron {result.Rows.Count} fila(s) usando la plantilla '{SelectedTemplate.Nombre}'.",
-                result.Warnings.Count == 0 ? InfoBarSeverity.Success : InfoBarSeverity.Warning);
+                result.Warnings.Count == 0 ? StatusSeverity.Success : StatusSeverity.Warning);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "No se pudo ejecutar la plantilla {TemplateId}.", SelectedTemplate?.Id);
-            ShowInfo("Error ejecutando plantilla", ex.Message, InfoBarSeverity.Error);
+            ShowInfo("Error ejecutando plantilla", ex.Message, StatusSeverity.Error);
         }
         finally
         {
@@ -217,7 +216,7 @@ public sealed partial class CustomReportRunnerViewModel : ObservableRecipient
             ShowInfo(
                 "Dataset no seleccionado",
                 "Configura DefaultWorkspaceId y DefaultDatasetId en Settings para ejecutar plantillas.",
-                InfoBarSeverity.Warning);
+                StatusSeverity.Warning);
             return;
         }
 
@@ -357,7 +356,7 @@ public sealed partial class CustomReportRunnerViewModel : ObservableRecipient
         SetSelectedVendors(selected);
     }
 
-    private void ShowInfo(string title, string message, InfoBarSeverity severity)
+    private void ShowInfo(string title, string message, StatusSeverity severity)
     {
         StatusTitle = title;
         StatusMessage = message;

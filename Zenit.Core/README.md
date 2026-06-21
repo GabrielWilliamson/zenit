@@ -1,4 +1,7 @@
-﻿
+﻿necesito unos ajustes para mi app el primero es que cuando mi app arranque debe de validarse que exista la configuracion completada es decir el connection string el siguiente paso es que debe validarse la autenticacion entonces debes de mostrar la pagina de autenticacion con microsoft abre el browser si es necesario para que pa persona se autentique  es como una especia de middleware que necesito. tambien necesito que esta pestania de autenticacion no use el sidebar el usuario no debe de poder ver ningun elemento a menos que ya se haya autenticado
+
+
+necesito que crees unas clases para estos tipos de datos que vienen de mi powerBI ya tengo cierta logica implementada con relacion a powerBI que puede servir como referencia. ademas me interesan unos metodos para obtener esta data.
 
 `EVALUATE ('MEDICIONES')`
 
@@ -48,3 +51,5 @@ EL REPORTE QUE ME INTERESA ES EL METAS VENTAS
 ```
 {"results":[{"tables":[{"rows":[{"REPORTES[REPORTE]":"BIC_CATEGORIAS"},{"REPORTES[REPORTE]":"CENTROLAC"},{"REPORTES[REPORTE]":"CLIENTE_PRODUCTO"},{"REPORTES[REPORTE]":"DIST_DIRECTA"},{"REPORTES[REPORTE]":"FERRETERO"},{"REPORTES[REPORTE]":"FOCOS"},{"REPORTES[REPORTE]":"KIMBERLY DETALLE"},{"REPORTES[REPORTE]":"KIMBERLY MAYORISTA"},{"REPORTES[REPORTE]":"KPI"},{"REPORTES[REPORTE]":"METAS_VENTAS"}]}]}]}
 ```
+
+

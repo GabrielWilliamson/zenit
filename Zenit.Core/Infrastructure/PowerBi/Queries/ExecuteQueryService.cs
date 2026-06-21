@@ -36,7 +36,7 @@ public sealed class ExecuteQueryService
         if (!dax.TrimStart().StartsWith("EVALUATE", StringComparison.OrdinalIgnoreCase))
             throw new Exception("El DAX debe comenzar con EVALUATE");
 
-        // IMPORTANT: evitar reanudar en el hilo de UI (WinUI/Dispatcher).
+        // IMPORTANT: evitar reanudar en el hilo de UI (Dispatcher).
         // Así, el parsing y otras operaciones posteriores no “pegan” la app.
         var token = await _tokenManager.GetValidTokenAsync().ConfigureAwait(false);
 
