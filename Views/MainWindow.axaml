@@ -1,0 +1,201 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:CompileBindings="False"
+        d:DesignWidth="1440"
+        d:DesignHeight="920"
+        x:Class="Zenit.Views.MainWindow"
+        Title="{Binding WindowTitle}"
+        Width="1440"
+        Height="920"
+        MinWidth="1180"
+        MinHeight="760"
+        Background="#F6F2E8">
+    <Window.Styles>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="#FFFDFC"/>
+            <Setter Property="BorderBrush" Value="#E5DCCD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="18"/>
+        </Style>
+
+        <Style Selector="Button.pane-toggle">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Background" Value="#EFE5D2"/>
+            <Setter Property="BorderBrush" Value="#D8C9AF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style Selector="Button.pane-toggle:pointerover">
+            <Setter Property="Background" Value="#E7DCC8"/>
+        </Style>
+
+        <Style Selector="Button.pane-toggle:pressed">
+            <Setter Property="Background" Value="#DCCEB8"/>
+        </Style>
+
+        <Style Selector="Border.nav-item-card">
+            <Setter Property="Background" Value="#FFF9F0"/>
+            <Setter Property="BorderBrush" Value="#E1D5C1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="FocusAdorner" Value="{x:Null}"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:pointerover">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected Border.nav-item-card">
+            <Setter Property="Background" Value="#2F4D3E"/>
+            <Setter Property="BorderBrush" Value="#2F4D3E"/>
+            <Setter Property="BoxShadow" Value="0 8 20 0 #1A2F4D3E"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:pointerover Border.nav-item-card">
+            <Setter Property="Background" Value="#F5EBDD"/>
+            <Setter Property="BorderBrush" Value="#D8C7AA"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected:pointerover Border.nav-item-card">
+            <Setter Property="Background" Value="#355746"/>
+            <Setter Property="BorderBrush" Value="#355746"/>
+            <Setter Property="BoxShadow" Value="0 10 24 0 #1F2F4D3E"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected TextBlock.nav-title">
+            <Setter Property="Foreground" Value="#FFF8EE"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected:pointerover TextBlock.nav-title">
+            <Setter Property="Foreground" Value="#FFF8EE"/>
+        </Style>
+
+        <Style Selector="ListBox.nav-list > ListBoxItem:selected TextBlock.nav-subtitle">
+            <Setter Property="Foreground" Value="#E4DCCF"/>
+        </Style>
+    </Window.Styles>
+
+    <SplitView IsPaneOpen="{Binding IsNavigationPaneOpen}"
+               DisplayMode="{Binding NavigationDisplayMode}"
+               PanePlacement="Left"
+               OpenPaneLength="316"
+               CompactPaneLength="0"
+               UseLightDismissOverlayMode="True">
+        <SplitView.Pane>
+            <Border Background="#EFE8D9"
+                    Padding="24"
+                    BorderBrush="#DDD0B8"
+                    BorderThickness="0,0,1,0">
+                <DockPanel LastChildFill="True">
+                    <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,24">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Zenit"
+                                       FontSize="30"
+                                       FontWeight="Bold"
+                                       Foreground="#2F4D3E"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <ListBox Classes="nav-list"
+                             ItemsSource="{Binding NavigationItems}"
+                             SelectedItem="{Binding SelectedPage}"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Classes="nav-item-card">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Classes="nav-title"
+                                                   Text="{Binding Title}"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="16"/>
+
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+        </SplitView.Pane>
+
+        <Grid RowDefinitions="Auto,*" Background="#F6F2E8">
+            <Border Background="#F6F2E8" Padding="28,24,28,18" BorderBrush="#DDD0B8" BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="18">
+                    <Button Classes="pane-toggle"
+                            Command="{Binding ToggleNavigationPaneCommand}"
+                            VerticalAlignment="Top"
+                            ToolTip.Tip="Abrir o cerrar navegacion">
+                        <Viewbox Width="18" Height="14">
+                            <Canvas Width="18" Height="14">
+                                <Rectangle Width="18" Height="2" RadiusX="1" RadiusY="1" Fill="#2F4D3E"/>
+                                <Rectangle Width="18" Height="2" RadiusX="1" RadiusY="1" Fill="#2F4D3E" Canvas.Top="6"/>
+                                <Rectangle Width="18" Height="2" RadiusX="1" RadiusY="1" Fill="#2F4D3E" Canvas.Top="12"/>
+                            </Canvas>
+                        </Viewbox>
+                    </Button>
+
+                    <StackPanel Grid.Column="1" Spacing="6">
+                        <TextBlock Text="{Binding CurrentPageTitle}" FontSize="28" FontWeight="Bold" Foreground="#2C2A26"/>
+                        <TextBlock Text="{Binding CurrentPageSubtitle}" Foreground="#6B6B5F"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="2"
+                               Text="Cargando..."
+                               IsVisible="{Binding IsPageLoading}"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"
+                               Foreground="#2F4D3E"/>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Margin="24" Classes="card">
+                <ContentControl Content="{Binding CurrentPage}"/>
+            </Border>
+        </Grid>
+    </SplitView>
+</Window>

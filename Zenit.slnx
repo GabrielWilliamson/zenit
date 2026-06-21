@@ -1,4 +1,3 @@
 <Solution>
-  <Project Path="Zenit.Core/Zenit.Core.csproj" />
-  <Project Path="Zenit/Zenit.csproj" />
+  <Project Path="Zenit.csproj" />
 </Solution>
