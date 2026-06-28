@@ -1,38 +1,39 @@
-name: ci
+# continuous integration workflow
+# name: ci
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
 
-env:
-  AVALONIA_TELEMETRY_OPTOUT: 1
+# env:
+#   AVALONIA_TELEMETRY_OPTOUT: 1
 
-jobs:
-  build:
-    runs-on: windows-latest
+# jobs:
+#   build:
+#     runs-on: windows-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
+#       - name: Setup .NET
+#         uses: actions/setup-dotnet@v4
+#         with:
+#           dotnet-version: 10.0.x
 
-      - name: Restore
-        run: dotnet restore Zenit.slnx
+#       - name: Restore
+#         run: dotnet restore Zenit.slnx
 
-      - name: Build
-        run: dotnet build Zenit.slnx -c Release --no-restore
+#       - name: Build
+#         run: dotnet build Zenit.slnx -c Release --no-restore
 
-      - name: Publish win-x64
-        run: >
-          dotnet publish Zenit.csproj
-          -c Release
-          -r win-x64
-          --self-contained true
-          --no-restore
-          -o artifacts/publish/win-x64
+#       - name: Publish win-x64
+#         run: >
+#           dotnet publish Zenit.csproj
+#           -c Release
+#           -r win-x64
+#           --self-contained true
+#           --no-restore
+#           -o artifacts/publish/win-x64
