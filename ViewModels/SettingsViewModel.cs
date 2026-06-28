@@ -34,6 +34,8 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty] private string whatsAppApiBaseUrl = string.Empty;
     [ObservableProperty] private string whatsAppSendMessagePath = "/api/whatsapp/messages/send";
     [ObservableProperty] private string whatsAppSendFilePath = "/api/whatsapp/files/send";
+    [ObservableProperty] private string appUpdateFeedUrl = string.Empty;
+    [ObservableProperty] private string appUpdateAccessToken = string.Empty;
     [ObservableProperty] private string startupSettingsStatus = string.Empty;
     [ObservableProperty] private bool isSavingStartupSettings;
 
@@ -223,6 +225,8 @@ public partial class SettingsViewModel : ObservableRecipient
             settings.WhatsAppApiBaseUrl = WhatsAppApiBaseUrl.Trim();
             settings.WhatsAppSendMessagePath = WhatsAppSendMessagePath.Trim();
             settings.WhatsAppSendFilePath = WhatsAppSendFilePath.Trim();
+            settings.AppUpdateFeedUrl = AppUpdateFeedUrl.Trim();
+            settings.AppUpdateAccessToken = AppUpdateAccessToken.Trim();
 
             if (!settings.TryValidateRequiredSecrets(out var validationError))
             {
@@ -255,6 +259,8 @@ public partial class SettingsViewModel : ObservableRecipient
         WhatsAppApiBaseUrl = settings.WhatsAppApiBaseUrl;
         WhatsAppSendMessagePath = settings.WhatsAppSendMessagePath;
         WhatsAppSendFilePath = settings.WhatsAppSendFilePath;
+        AppUpdateFeedUrl = settings.AppUpdateFeedUrl;
+        AppUpdateAccessToken = settings.AppUpdateAccessToken;
 
         StartupSettingsStatus = settings.HasRequiredSecrets
             ? "Secretos cargados correctamente."

@@ -128,7 +128,12 @@ public sealed class AppBootstrapper
 
     private HomeViewModel BuildHomeViewModel()
     {
-        return new HomeViewModel(BuildTokenManager(), BuildDefaultSelectionService());
+        return new HomeViewModel(BuildTokenManager(), BuildDefaultSelectionService(), BuildAppUpdateService());
+    }
+
+    private AppUpdateService BuildAppUpdateService()
+    {
+        return new AppUpdateService(AppSettings);
     }
 
     private ReportsViewModel BuildReportsViewModel()

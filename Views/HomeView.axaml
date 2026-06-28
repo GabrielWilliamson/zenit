@@ -6,6 +6,19 @@
         <StackPanel Spacing="16">
             <Border Classes="card">
                 <StackPanel Spacing="8">
+                    <TextBlock Text="Actualizaciones" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding CurrentVersion, StringFormat='Version actual: {0}'}"/>
+                    <TextBlock Text="{Binding InstallationMode}" Foreground="#6B6B5F"/>
+                    <TextBlock Text="{Binding UpdateStatusMessage}" TextWrapping="Wrap"/>
+                    <Button Content="{Binding UpdateActionButtonText}"
+                            Command="{Binding RunUpdateActionCommand}"
+                            IsEnabled="{Binding IsUpdateActionEnabled}"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="8">
                     <TextBlock Text="Estado del token" FontSize="20" FontWeight="SemiBold"/>
                     <TextBlock Text="{Binding Status}" FontSize="16"/>
                     <StackPanel Orientation="Horizontal" Spacing="12">

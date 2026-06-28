@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Zenit.Models;
 using Zenit.Services;
 
 namespace Zenit.ViewModels;
@@ -14,6 +15,16 @@ public partial class HomeViewModel : ObservableRecipient
 {
     private readonly TokenManager _tokenManager;
     private readonly PowerBiDefaultSelectionService _defaultSelectionService;
+    private readonly AppUpdateService _appUpdateService;
+    private AppUpdateActionKind _updateActionKind;
+    private bool _isUpdating;
+    private AppUpdateStatus _currentUpdateStatus = new(
+        CurrentVersion: "desconocida",
+        InstallationMode: string.Empty,
+        StatusMessage: string.Empty,
+        ActionButtonText: "Actualizar no disponible",
+        IsActionEnabled: false,
+        ActionKind: AppUpdateActionKind.None);
 
     [ObservableProperty]
     private string status = "Sin token";
@@ -36,17 +47,38 @@ public partial class HomeViewModel : ObservableRecipient
     [ObservableProperty]
     private string deviceCodeInstructions = string.Empty;
 
+    [ObservableProperty]
+    private string currentVersion = "desconocida";
+
+    [ObservableProperty]
+    private string installationMode = string.Empty;
+
+    [ObservableProperty]
+    private string updateStatusMessage = string.Empty;
+
+    [ObservableProperty]
+    private string updateActionButtonText = "Actualizar no disponible";
+
+    [ObservableProperty]
+    private bool isUpdateActionEnabled;
+
     public bool CanGenerateToken => !IsBusy;
 
-    public HomeViewModel(TokenManager tokenManager, PowerBiDefaultSelectionService defaultSelectionService)
+    public HomeViewModel(
+        TokenManager tokenManager,
+        PowerBiDefaultSelectionService defaultSelectionService,
+        AppUpdateService appUpdateService)
     {
         _tokenManager = tokenManager;
         _defaultSelectionService = defaultSelectionService;
+        _appUpdateService = appUpdateService;
+        ApplyUpdateStatus(_appUpdateService.GetCurrentStatus());
     }
 
     public async Task InitializeAsync()
     {
         DeviceCodeInstructions = string.Empty;
+        ApplyUpdateStatus(_appUpdateService.GetCurrentStatus());
         await RefreshTokenStatusAsync();
         await RefreshPowerBiConfigurationAsync();
     }
@@ -133,6 +165,72 @@ public partial class HomeViewModel : ObservableRecipient
     private async Task GenerateTokenWithDeviceCodeAsync()
     {
         await GenerateTokenAsync(message => DeviceCodeInstructions = message);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRunUpdateAction))]
+    private async Task RunUpdateActionAsync()
+    {
+        if (_isUpdating)
+            return;
+
+        try
+        {
+            switch (_updateActionKind)
+            {
+                case AppUpdateActionKind.CheckForUpdates:
+                    _isUpdating = true;
+                    IsUpdateActionEnabled = false;
+                    UpdateStatusMessage = "Buscando actualizaciones...";
+
+                    var updateStatus = await _appUpdateService.DownloadLatestUpdateAsync(progress =>
+                    {
+                        UpdateStatusMessage = $"Descargando actualizacion... {progress}%";
+                    });
+
+                    ApplyUpdateStatus(updateStatus);
+                    break;
+
+                case AppUpdateActionKind.ApplyPendingRestart:
+                    IsUpdateActionEnabled = false;
+                    UpdateStatusMessage = "Cerrando la aplicacion para instalar la actualizacion...";
+                    _appUpdateService.StartPendingUpdateAndRestart();
+                    break;
+            }
+        }
+        catch (Exception exception)
+        {
+            UpdateStatusMessage = $"No se pudo completar la actualizacion: {exception.Message}";
+            ApplyUpdateStatus(_appUpdateService.GetCurrentStatus(), preserveStatusMessage: true);
+        }
+        finally
+        {
+            _isUpdating = false;
+
+            if (_updateActionKind != AppUpdateActionKind.ApplyPendingRestart)
+                ApplyUpdateStatus(_currentUpdateStatus);
+        }
+    }
+
+    private bool CanRunUpdateAction() => IsUpdateActionEnabled && !_isUpdating;
+
+    private void ApplyUpdateStatus(AppUpdateStatus status, bool preserveStatusMessage = false)
+    {
+        _currentUpdateStatus = status;
+        _updateActionKind = status.ActionKind;
+        CurrentVersion = status.CurrentVersion;
+        InstallationMode = status.InstallationMode;
+
+        if (!preserveStatusMessage)
+            UpdateStatusMessage = status.StatusMessage;
+
+        UpdateActionButtonText = status.ActionButtonText;
+        IsUpdateActionEnabled = status.IsActionEnabled && !_isUpdating;
+        RunUpdateActionCommand.NotifyCanExecuteChanged();
+    }
+
+    partial void OnIsUpdateActionEnabledChanged(bool value)
+    {
+        RunUpdateActionCommand.NotifyCanExecuteChanged();
     }
 
     partial void OnIsBusyChanged(bool value)

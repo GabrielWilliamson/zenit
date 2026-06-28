@@ -34,6 +34,8 @@ public sealed class Settings
     public string WhatsAppApiBaseUrl { get; set; } = string.Empty;
     public string WhatsAppSendMessagePath { get; set; } = "/api/whatsapp/messages/send";
     public string WhatsAppSendFilePath { get; set; } = "/api/whatsapp/files/send";
+    public string AppUpdateFeedUrl { get; set; } = string.Empty;
+    public string AppUpdateAccessToken { get; set; } = string.Empty;
 
     public bool HasRequiredSecrets => TryValidateRequiredSecrets(out _);
 
@@ -115,6 +117,8 @@ public sealed class Settings
         PowerBiTenantId = PowerBiTenantId.Trim();
         PowerBiClientId = PowerBiClientId.Trim();
         WhatsAppApiBaseUrl = WhatsAppApiBaseUrl.Trim();
+        AppUpdateFeedUrl = AppUpdateFeedUrl.Trim();
+        AppUpdateAccessToken = AppUpdateAccessToken.Trim();
     }
 
     private static string NormalizeOrDefault(string value, string defaultValue)

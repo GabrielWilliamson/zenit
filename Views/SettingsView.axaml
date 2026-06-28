@@ -14,7 +14,7 @@
             <Border Classes="card">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Secretos locales" FontSize="20" FontWeight="SemiBold"/>
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
                         <StackPanel Grid.Row="0" Grid.Column="0" Spacing="6">
                             <TextBlock Text="Connection string"/>
                             <TextBox Text="{Binding ConnectionString}"/>
@@ -46,6 +46,20 @@
                         <StackPanel Grid.Row="3" Grid.Column="1" Spacing="6">
                             <TextBlock Text="WhatsApp send file path"/>
                             <TextBox Text="{Binding WhatsAppSendFilePath}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Spacing="6">
+                            <TextBlock Text="App update feed URL (Velopack / hosting privado)"/>
+                            <TextBox Text="{Binding AppUpdateFeedUrl}"/>
+                            <TextBlock Text="URL base donde publicas releases.win.json (R2, S3, Azure Blob, etc.)."
+                                       Foreground="#6B6B5F"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Spacing="6">
+                            <TextBlock Text="App update access token (opcional)"/>
+                            <TextBox Text="{Binding AppUpdateAccessToken}"/>
+                            <TextBlock Text="Token Bearer de solo lectura si tu hosting privado lo requiere."
+                                       Foreground="#6B6B5F"
+                                       TextWrapping="Wrap"/>
                         </StackPanel>
                     </Grid>
                     <Button Content="Guardar secretos" Command="{Binding SaveStartupSettingsCommand}" HorizontalAlignment="Left"/>
