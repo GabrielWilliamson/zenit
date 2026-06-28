@@ -23,10 +23,10 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore Zenit.sln
+        run: dotnet restore Zenit.slnx
 
       - name: Build
-        run: dotnet build Zenit.sln -c Release --no-restore
+        run: dotnet build Zenit.slnx -c Release --no-restore
 
       - name: Publish win-x64
         run: >
