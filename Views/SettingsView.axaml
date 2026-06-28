@@ -49,7 +49,7 @@
                         <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Spacing="6">
                             <TextBlock Text="App update feed URL (Velopack / hosting privado)"/>
                             <TextBox Text="{Binding AppUpdateFeedUrl}"/>
-                            <TextBlock Text="URL base donde publicas releases.win.json (R2, S3, Azure Blob, etc.)."
+                            <TextBlock Text="URL del repo de GitHub (ej. https://github.com/usuario/zenit) o URL base de hosting estatico donde Velopack publica releases.win.json. No incluyas releases.win.json en la URL."
                                        Foreground="#6B6B5F"
                                        TextWrapping="Wrap"/>
                         </StackPanel>

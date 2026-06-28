@@ -18,6 +18,7 @@ public partial class HomeViewModel : ObservableRecipient
     private readonly AppUpdateService _appUpdateService;
     private AppUpdateActionKind _updateActionKind;
     private bool _isUpdating;
+    private bool _updateActionFailed;
     private AppUpdateStatus _currentUpdateStatus = new(
         CurrentVersion: "desconocida",
         InstallationMode: string.Empty,
@@ -173,6 +174,8 @@ public partial class HomeViewModel : ObservableRecipient
         if (_isUpdating)
             return;
 
+        _updateActionFailed = false;
+
         try
         {
             switch (_updateActionKind)
@@ -199,14 +202,15 @@ public partial class HomeViewModel : ObservableRecipient
         }
         catch (Exception exception)
         {
-            UpdateStatusMessage = $"No se pudo completar la actualizacion: {exception.Message}";
+            _updateActionFailed = true;
+            UpdateStatusMessage = exception.Message;
             ApplyUpdateStatus(_appUpdateService.GetCurrentStatus(), preserveStatusMessage: true);
         }
         finally
         {
             _isUpdating = false;
 
-            if (_updateActionKind != AppUpdateActionKind.ApplyPendingRestart)
+            if (!_updateActionFailed && _updateActionKind != AppUpdateActionKind.ApplyPendingRestart)
                 ApplyUpdateStatus(_currentUpdateStatus);
         }
     }
