@@ -22,24 +22,6 @@
             <Setter Property="Padding" Value="18"/>
         </Style>
 
-        <Style Selector="Button.pane-toggle">
-            <Setter Property="Width" Value="48"/>
-            <Setter Property="Height" Value="48"/>
-            <Setter Property="CornerRadius" Value="14"/>
-            <Setter Property="Background" Value="#EFE5D2"/>
-            <Setter Property="BorderBrush" Value="#D8C9AF"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="0"/>
-        </Style>
-
-        <Style Selector="Button.pane-toggle:pointerover">
-            <Setter Property="Background" Value="#E7DCC8"/>
-        </Style>
-
-        <Style Selector="Button.pane-toggle:pressed">
-            <Setter Property="Background" Value="#DCCEB8"/>
-        </Style>
-
         <Style Selector="Border.nav-item-card">
             <Setter Property="Background" Value="#FFF9F0"/>
             <Setter Property="BorderBrush" Value="#E1D5C1"/>
@@ -164,24 +146,21 @@
         </SplitView.Pane>
 
         <Grid RowDefinitions="Auto,*" Background="#F6F2E8">
-            <Border Background="#F6F2E8" Padding="28,24,28,18" BorderBrush="#DDD0B8" BorderThickness="0,0,0,1">
+            <Border Background="#F6F2E8" Padding="4, 4, 4, 4" BorderBrush="#DDD0B8" BorderThickness="0,0,0,1">
                 <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="18">
-                    <Button Classes="pane-toggle"
-                            Command="{Binding ToggleNavigationPaneCommand}"
-                            VerticalAlignment="Top"
-                            ToolTip.Tip="Abrir o cerrar navegacion">
-                        <Viewbox Width="18" Height="14">
-                            <Canvas Width="18" Height="14">
-                                <Rectangle Width="18" Height="2" RadiusX="1" RadiusY="1" Fill="#2F4D3E"/>
-                                <Rectangle Width="18" Height="2" RadiusX="1" RadiusY="1" Fill="#2F4D3E" Canvas.Top="6"/>
-                                <Rectangle Width="18" Height="2" RadiusX="1" RadiusY="1" Fill="#2F4D3E" Canvas.Top="12"/>
-                            </Canvas>
-                        </Viewbox>
+                    <Button
+                        Command="{Binding ToggleNavigationPaneCommand}"
+                        VerticalAlignment="Top"
+                        ToolTip.Tip="Abrir o cerrar navegacion">
+                        <TextBlock
+                            Text="☰"
+                            FontSize="15"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
                     </Button>
 
-                    <StackPanel Grid.Column="1" Spacing="6">
-                        <TextBlock Text="{Binding CurrentPageTitle}" FontSize="28" FontWeight="Bold" Foreground="#2C2A26"/>
-                        <TextBlock Text="{Binding CurrentPageSubtitle}" Foreground="#6B6B5F"/>
+                    <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Text="{Binding CurrentPageTitle}" FontSize="18" FontWeight="Bold" Foreground="#2C2A26"/>
                     </StackPanel>
 
                     <TextBlock Grid.Column="2"

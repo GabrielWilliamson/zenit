@@ -17,8 +17,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string WindowTitle => "Zenit";
     public string CurrentPageTitle => SelectedPage?.Title ?? "Zenit";
-    public string CurrentPageSubtitle => SelectedPage?.Subtitle ?? "";
-
+    
     public MainWindowViewModel(IEnumerable<NavigationItem> pages)
     {
         foreach (var page in pages)
@@ -31,7 +30,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentPage = value?.ViewModel;
         OnPropertyChanged(nameof(CurrentPageTitle));
-        OnPropertyChanged(nameof(CurrentPageSubtitle));
 
         if (NavigationDisplayMode is SplitViewDisplayMode.Overlay or SplitViewDisplayMode.CompactOverlay)
             IsNavigationPaneOpen = false;
@@ -76,7 +74,6 @@ public partial class MainWindowViewModel : ViewModelBase
 public sealed class NavigationItem
 {
     public required string Title { get; init; }
-    public required string Subtitle { get; init; }
     public required object ViewModel { get; init; }
     public required Func<Task> ActivateAsync { get; init; }
 }

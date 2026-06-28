@@ -69,57 +69,49 @@ public sealed class AppBootstrapper
         {
             new NavigationItem
             {
-                Title = "Token",
-                Subtitle = "Autenticacion Power BI",
+                Title = "Autenticacion",
                 ViewModel = Home,
                 ActivateAsync = () => Home.InitializeAsync()
             },
             new NavigationItem
             {
                 Title = "Reportes",
-                Subtitle = "Consulta y exportacion",
                 ViewModel = Reports,
                 ActivateAsync = () => Reports.InitializeAsync()
             },
             new NavigationItem
             {
                 Title = "Plantillas",
-                Subtitle = "Builder de reportes",
                 ViewModel = AdvancedReports,
                 ActivateAsync = () => AdvancedReports.InitializeAsync()
             },
             new NavigationItem
             {
                 Title = "Runner",
-                Subtitle = "Ejecucion de templates",
                 ViewModel = CustomReportRunner,
                 ActivateAsync = () => CustomReportRunner.InitializeAsync()
             },
             new NavigationItem
             {
                 Title = "Vendedores",
-                Subtitle = "Mantenimiento",
                 ViewModel = Vendedores,
                 ActivateAsync = () => Vendedores.InitializeAsync()
             },
             new NavigationItem
             {
                 Title = "DAX",
-                Subtitle = "Consulta manual",
                 ViewModel = PowerBiQuery,
                 ActivateAsync = () => Task.CompletedTask
             },
             new NavigationItem
             {
                 Title = "Ajustes",
-                Subtitle = "Secretos",
                 ViewModel = SettingsViewModel,
                 ActivateAsync = () => SettingsViewModel.InitializeAsync()
             },
             new NavigationItem
             {
                 Title = "Planes de salario",
-                Subtitle = "Generar planes de salario",
                 ViewModel = SalaryPlansGeneratorViewModel,
                 ActivateAsync = () => Task.CompletedTask
             }
