@@ -111,8 +111,8 @@ public sealed class AppBootstrapper
             },
             new NavigationItem
             {
-                Title = "Settings",
-                Subtitle = "Secretos y defaults",
+                Title = "Ajustes",
+                Subtitle = "Secretos",
                 ViewModel = SettingsViewModel,
                 ActivateAsync = () => SettingsViewModel.InitializeAsync()
             },

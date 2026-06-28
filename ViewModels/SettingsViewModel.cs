@@ -39,8 +39,6 @@ public partial class SettingsViewModel : ObservableRecipient
     [ObservableProperty] private string startupSettingsStatus = string.Empty;
     [ObservableProperty] private bool isSavingStartupSettings;
 
-    public string ThemeDescription => "Tema claro fijo por defecto en Zenit.";
-
     public SettingsViewModel(PowerBiDefaultSelectionService powerBiDefaultSelectionService)
     {
         _powerBiDefaultSelectionService = powerBiDefaultSelectionService;

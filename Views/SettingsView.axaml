@@ -5,9 +5,8 @@
     <ScrollViewer>
         <StackPanel Spacing="16">
             <Border Classes="card">
-                <StackPanel Spacing="6">
+                <StackPanel Spacing="4">
                     <TextBlock Text="{Binding VersionDescription}" FontSize="20" FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding ThemeDescription}" Foreground="#6B6B5F"/>
                 </StackPanel>
             </Border>
 
