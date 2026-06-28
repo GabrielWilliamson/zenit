@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Zenit.Infrastructure.Logging;
 using Zenit.Models.CustomReports;
-using Microsoft.UI.Xaml;
 
 namespace Zenit.ViewModels;
 
@@ -129,15 +128,15 @@ public partial class AdvancedReportsViewModel
     public bool IsMultiDescriptionTypePresetSelected => string.Equals(RuleEditorTypePreset, "multi_description", StringComparison.OrdinalIgnoreCase);
     public bool IsTieredTypePresetSelected => string.Equals(RuleEditorTypePreset, "tiered", StringComparison.OrdinalIgnoreCase);
 
-    public Visibility RuleTypeSimpleVisibility => IsSimpleTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility RuleTypePerDescriptionVisibility => IsPerDescriptionTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility RuleTypeMultiDescriptionVisibility => IsMultiDescriptionTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility RuleTypeTieredVisibility => IsTieredTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility RuleTierToggleVisibility => IsTieredTypePresetSelected ? Visibility.Collapsed : Visibility.Visible;
-    public Visibility RuleSuccessSectionByPresetVisibility => IsTieredTypePresetSelected ? Visibility.Collapsed : Visibility.Visible;
-    public Visibility RuleTierSectionByPresetVisibility => IsTieredTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility RuleSuccessCardVisibility => IsSimpleTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
-    public Visibility RuleFailureCardVisibility => IsSimpleTypePresetSelected || IsTieredTypePresetSelected ? Visibility.Visible : Visibility.Collapsed;
+    public bool IsRuleTypeSimpleVisible => IsSimpleTypePresetSelected;
+    public bool IsRuleTypePerDescriptionVisible => IsPerDescriptionTypePresetSelected;
+    public bool IsRuleTypeMultiDescriptionVisible => IsMultiDescriptionTypePresetSelected;
+    public bool IsRuleTypeTieredVisible => IsTieredTypePresetSelected;
+    public bool IsRuleTierToggleVisible => !IsTieredTypePresetSelected;
+    public bool IsRuleSuccessSectionByPresetVisible => !IsTieredTypePresetSelected;
+    public bool IsRuleTierSectionByPresetVisible => IsTieredTypePresetSelected;
+    public bool IsRuleSuccessCardVisible => IsSimpleTypePresetSelected;
+    public bool IsRuleFailureCardVisible => IsSimpleTypePresetSelected || IsTieredTypePresetSelected;
 
     public string BuilderRulesSummary => ConfiguredRules.Count == 0
         ? "Aun no hay reglas configuradas."
@@ -191,21 +190,11 @@ public partial class AdvancedReportsViewModel
         }
     }
 
-    public Visibility RuleEditorNameValidationVisibility => string.IsNullOrWhiteSpace(RuleEditorNameValidationMessage)
-        ? Visibility.Collapsed
-        : Visibility.Visible;
-    public Visibility RuleEditorMetricValidationVisibility => string.IsNullOrWhiteSpace(RuleEditorMetricValidationMessage)
-        ? Visibility.Collapsed
-        : Visibility.Visible;
-    public Visibility RuleEditorConditionValidationVisibility => string.IsNullOrWhiteSpace(RuleEditorConditionValidationMessage)
-        ? Visibility.Collapsed
-        : Visibility.Visible;
-    public Visibility RuleEditorRewardValidationVisibility => string.IsNullOrWhiteSpace(RuleEditorRewardValidationMessage)
-        ? Visibility.Collapsed
-        : Visibility.Visible;
-    public Visibility PerDescriptionDuplicateValidationVisibility => string.IsNullOrWhiteSpace(PerDescriptionDuplicateValidationMessage)
-        ? Visibility.Collapsed
-        : Visibility.Visible;
+    public bool IsRuleEditorNameValidationVisible => !string.IsNullOrWhiteSpace(RuleEditorNameValidationMessage);
+    public bool IsRuleEditorMetricValidationVisible => !string.IsNullOrWhiteSpace(RuleEditorMetricValidationMessage);
+    public bool IsRuleEditorConditionValidationVisible => !string.IsNullOrWhiteSpace(RuleEditorConditionValidationMessage);
+    public bool IsRuleEditorRewardValidationVisible => !string.IsNullOrWhiteSpace(RuleEditorRewardValidationMessage);
+    public bool IsPerDescriptionDuplicateValidationVisible => !string.IsNullOrWhiteSpace(PerDescriptionDuplicateValidationMessage);
 
     public string PreservedLegacyRulesSummary => PreservedLegacyRules.Count == 0
         ? string.Empty
@@ -215,55 +204,36 @@ public partial class AdvancedReportsViewModel
     public bool CanDeleteSelectedRule => SelectedConfiguredRule != null;
     public bool CanSaveRuleEditor =>
         CanConfigureBuilderRules
-        && RuleEditorNameValidationVisibility == Visibility.Collapsed
-        && RuleEditorMetricValidationVisibility == Visibility.Collapsed
-        && RuleEditorConditionValidationVisibility == Visibility.Collapsed
-        && RuleEditorRewardValidationVisibility == Visibility.Collapsed
-        && PerDescriptionDuplicateValidationVisibility == Visibility.Collapsed;
+        && !IsRuleEditorNameValidationVisible
+        && !IsRuleEditorMetricValidationVisible
+        && !IsRuleEditorConditionValidationVisible
+        && !IsRuleEditorRewardValidationVisible
+        && !IsPerDescriptionDuplicateValidationVisible;
 
-    public Visibility RuleEditorTargetVisibility => IsMultiDescriptionTypePresetSelected && !RuleEditorUseTiers && RequiresBuilderTarget(RuleEditorEvaluationType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorTargetVisible =>
+        IsMultiDescriptionTypePresetSelected && !RuleEditorUseTiers && RequiresBuilderTarget(RuleEditorEvaluationType);
 
-    public Visibility RuleEditorTierSectionVisibility => RuleEditorUseTiers
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorTierSectionVisible => RuleEditorUseTiers;
 
-    public Visibility RuleEditorSuccessSectionVisibility => RuleEditorUseTiers
-        ? Visibility.Collapsed
-        : Visibility.Visible;
+    public bool IsRuleEditorSuccessSectionVisible => !RuleEditorUseTiers;
 
     public string RuleEditorFailureSectionTitle => RuleEditorUseTiers
         ? "Resultado si no alcanza ningun nivel"
         : "Resultado si no cumple";
 
-    public Visibility RuleEditorSuccessAmountVisibility => RequiresBuilderAmount(RuleEditorSuccessActionType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorSuccessAmountVisible => RequiresBuilderAmount(RuleEditorSuccessActionType);
 
-    public Visibility RuleEditorSuccessValueVisibility => RequiresBuilderText(RuleEditorSuccessActionType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorSuccessValueVisible => RequiresBuilderText(RuleEditorSuccessActionType);
 
-    public Visibility RuleEditorFailureAmountVisibility => RequiresBuilderAmount(RuleEditorFailureActionType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorFailureAmountVisible => RequiresBuilderAmount(RuleEditorFailureActionType);
 
-    public Visibility RuleEditorFailureValueVisibility => RequiresBuilderText(RuleEditorFailureActionType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorFailureValueVisible => RequiresBuilderText(RuleEditorFailureActionType);
 
-    public Visibility RuleEditorTierAmountVisibility => RequiresBuilderAmount(RuleEditorTierActionType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorTierAmountVisible => RequiresBuilderAmount(RuleEditorTierActionType);
 
-    public Visibility RuleEditorTierValueVisibility => RequiresBuilderText(RuleEditorTierActionType)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsRuleEditorTierValueVisible => RequiresBuilderText(RuleEditorTierActionType);
 
-    public Visibility PreservedLegacyRulesVisibility => PreservedLegacyRules.Count > 0
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsPreservedLegacyRulesVisible => PreservedLegacyRules.Count > 0;
 
     public async Task InitializeBuilderAsync()
     {
@@ -503,11 +473,11 @@ public partial class AdvancedReportsViewModel
     private void SaveRuleBuilderRule()
     {
         UpdateRuleEditorSoftValidations();
-        if (RuleEditorNameValidationVisibility == Visibility.Visible
-            || RuleEditorMetricValidationVisibility == Visibility.Visible
-            || RuleEditorConditionValidationVisibility == Visibility.Visible
-            || RuleEditorRewardValidationVisibility == Visibility.Visible
-            || PerDescriptionDuplicateValidationVisibility == Visibility.Visible)
+        if (IsRuleEditorNameValidationVisible
+            || IsRuleEditorMetricValidationVisible
+            || IsRuleEditorConditionValidationVisible
+            || IsRuleEditorRewardValidationVisible
+            || IsPerDescriptionDuplicateValidationVisible)
         {
             StatusMessage = "Revisa los campos marcados para completar la regla.";
             return;
@@ -1335,7 +1305,7 @@ public partial class AdvancedReportsViewModel
         RefreshBuilderRuleCatalogFromSelection();
         RefreshRuleBuckets();
         OnPropertyChanged(nameof(PreservedLegacyRulesSummary));
-        OnPropertyChanged(nameof(PreservedLegacyRulesVisibility));
+        OnPropertyChanged(nameof(IsPreservedLegacyRulesVisible));
     }
 
     private void MoveTemplateColumnsToSelected(IEnumerable<ReportColumnPickerItem> items)
@@ -1511,7 +1481,7 @@ public partial class AdvancedReportsViewModel
         ClearRuleBuilderEditor();
         RefreshRuleBuckets();
         OnPropertyChanged(nameof(PreservedLegacyRulesSummary));
-        OnPropertyChanged(nameof(PreservedLegacyRulesVisibility));
+        OnPropertyChanged(nameof(IsPreservedLegacyRulesVisible));
     }
 
     private void RefreshRuleBuckets()
@@ -1600,36 +1570,36 @@ public partial class AdvancedReportsViewModel
 
     private void UpdateBuilderEditorVisibility()
     {
-        OnPropertyChanged(nameof(RuleEditorTargetVisibility));
-        OnPropertyChanged(nameof(RuleEditorTierSectionVisibility));
-        OnPropertyChanged(nameof(RuleEditorSuccessSectionVisibility));
+        OnPropertyChanged(nameof(IsRuleEditorTargetVisible));
+        OnPropertyChanged(nameof(IsRuleEditorTierSectionVisible));
+        OnPropertyChanged(nameof(IsRuleEditorSuccessSectionVisible));
         OnPropertyChanged(nameof(RuleEditorFailureSectionTitle));
-        OnPropertyChanged(nameof(RuleEditorSuccessAmountVisibility));
-        OnPropertyChanged(nameof(RuleEditorSuccessValueVisibility));
-        OnPropertyChanged(nameof(RuleEditorFailureAmountVisibility));
-        OnPropertyChanged(nameof(RuleEditorFailureValueVisibility));
-        OnPropertyChanged(nameof(RuleEditorTierAmountVisibility));
-        OnPropertyChanged(nameof(RuleEditorTierValueVisibility));
+        OnPropertyChanged(nameof(IsRuleEditorSuccessAmountVisible));
+        OnPropertyChanged(nameof(IsRuleEditorSuccessValueVisible));
+        OnPropertyChanged(nameof(IsRuleEditorFailureAmountVisible));
+        OnPropertyChanged(nameof(IsRuleEditorFailureValueVisible));
+        OnPropertyChanged(nameof(IsRuleEditorTierAmountVisible));
+        OnPropertyChanged(nameof(IsRuleEditorTierValueVisible));
         OnPropertyChanged(nameof(RuleEditorTypePresetHelp));
         OnPropertyChanged(nameof(IsSimpleTypePresetSelected));
         OnPropertyChanged(nameof(IsPerDescriptionTypePresetSelected));
         OnPropertyChanged(nameof(IsMultiDescriptionTypePresetSelected));
         OnPropertyChanged(nameof(IsTieredTypePresetSelected));
-        OnPropertyChanged(nameof(RuleTypeSimpleVisibility));
-        OnPropertyChanged(nameof(RuleTypePerDescriptionVisibility));
-        OnPropertyChanged(nameof(RuleTypeMultiDescriptionVisibility));
-        OnPropertyChanged(nameof(RuleTypeTieredVisibility));
-        OnPropertyChanged(nameof(RuleTierToggleVisibility));
-        OnPropertyChanged(nameof(RuleSuccessSectionByPresetVisibility));
-        OnPropertyChanged(nameof(RuleTierSectionByPresetVisibility));
-        OnPropertyChanged(nameof(RuleSuccessCardVisibility));
-        OnPropertyChanged(nameof(RuleFailureCardVisibility));
+        OnPropertyChanged(nameof(IsRuleTypeSimpleVisible));
+        OnPropertyChanged(nameof(IsRuleTypePerDescriptionVisible));
+        OnPropertyChanged(nameof(IsRuleTypeMultiDescriptionVisible));
+        OnPropertyChanged(nameof(IsRuleTypeTieredVisible));
+        OnPropertyChanged(nameof(IsRuleTierToggleVisible));
+        OnPropertyChanged(nameof(IsRuleSuccessSectionByPresetVisible));
+        OnPropertyChanged(nameof(IsRuleTierSectionByPresetVisible));
+        OnPropertyChanged(nameof(IsRuleSuccessCardVisible));
+        OnPropertyChanged(nameof(IsRuleFailureCardVisible));
         OnPropertyChanged(nameof(RuleEditorLiveSummary));
-        OnPropertyChanged(nameof(RuleEditorNameValidationVisibility));
-        OnPropertyChanged(nameof(RuleEditorMetricValidationVisibility));
-        OnPropertyChanged(nameof(RuleEditorConditionValidationVisibility));
-        OnPropertyChanged(nameof(RuleEditorRewardValidationVisibility));
-        OnPropertyChanged(nameof(PerDescriptionDuplicateValidationVisibility));
+        OnPropertyChanged(nameof(IsRuleEditorNameValidationVisible));
+        OnPropertyChanged(nameof(IsRuleEditorMetricValidationVisible));
+        OnPropertyChanged(nameof(IsRuleEditorConditionValidationVisible));
+        OnPropertyChanged(nameof(IsRuleEditorRewardValidationVisible));
+        OnPropertyChanged(nameof(IsPerDescriptionDuplicateValidationVisible));
         OnPropertyChanged(nameof(CanSaveRuleEditor));
         OnPropertyChanged(nameof(CanDeleteSelectedRule));
         UpdateRuleEditorSoftValidations();

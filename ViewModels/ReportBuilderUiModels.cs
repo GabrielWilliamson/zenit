@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Zenit.Models.CustomReports;
-using Microsoft.UI.Xaml;
 
 namespace Zenit.ViewModels;
 
@@ -314,13 +313,11 @@ public sealed partial class DescriptionAmountRuleLineUiModel : ObservableObject
     [ObservableProperty]
     private string amount = string.Empty;
 
-    public Visibility AmountValidationVisibility => string.IsNullOrWhiteSpace(Amount)
-        ? Visibility.Visible
-        : Visibility.Collapsed;
+    public bool IsAmountValidationVisible => string.IsNullOrWhiteSpace(Amount);
 
     partial void OnAmountChanged(string value)
     {
-        OnPropertyChanged(nameof(AmountValidationVisibility));
+        OnPropertyChanged(nameof(IsAmountValidationVisible));
     }
 }
 
