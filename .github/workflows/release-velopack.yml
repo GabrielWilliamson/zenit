@@ -1,27 +1,12 @@
 name: release-velopack
 
-# Publica builds de Velopack en Supabase Storage (API S3 compatible).
-#
-# Secrets requeridos en GitHub (Settings → Secrets and variables → Actions):
-#   SUPABASE_S3_ACCESS_KEY_ID      Access Key ID (Supabase → Project Settings → Storage → S3)
-#   SUPABASE_S3_SECRET_ACCESS_KEY  Secret Access Key
-#   SUPABASE_S3_ENDPOINT           https://<project_ref>.storage.supabase.co/storage/v1/s3
-#   SUPABASE_S3_REGION             Region del proyecto (ej. us-east-1)
-#   SUPABASE_STORAGE_BUCKET        Nombre del bucket (ej. zenit-releases)
-#
-# Opcional:
-#   SUPABASE_STORAGE_PREFIX        Prefijo dentro del bucket (default: zenit)
-#
-# URL del feed para AppUpdateFeedUrl (bucket publico):
-#   https://<project_ref>.supabase.co/storage/v1/object/public/<bucket>/<prefix>/win
-
 on:
   push:
     tags:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   PROJECT_PATH: Zenit.csproj
@@ -30,12 +15,10 @@ env:
   RELEASE_DIR: artifacts/velopack/win-x64
   APP_ID: Zenit
   APP_TITLE: Zenit
-  MAIN_EXE: Zenit.exe
-  VELOPACK_VERSION: 1.2.0
+  MAIN_EXE: zenit.exe
+  VELOPACK_VERSION: 0.0.1298
   WINDOWS_RUNTIME: win-x64
-  LINUX_RUNTIME: linux-x64
   AVALONIA_TELEMETRY_OPTOUT: 1
-  SUPABASE_STORAGE_PREFIX: ${{ vars.SUPABASE_STORAGE_PREFIX || 'zenit' }}
 
 jobs:
   release:
@@ -59,8 +42,8 @@ jobs:
         shell: bash
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
-            echo "Expected a semver tag like v1.2.3, got '$GITHUB_REF_NAME'." >&2
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected a stable semver tag like v1.2.3, got '$GITHUB_REF_NAME'." >&2
             exit 1
           fi
 
@@ -103,30 +86,16 @@ jobs:
           dotnet tool install --global vpk --version "$VELOPACK_VERSION"
           echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
 
-      - name: Pack and upload release to Supabase
+      - name: Pack and upload release
         shell: bash
         env:
-          SUPABASE_S3_ACCESS_KEY_ID: ${{ secrets.SUPABASE_S3_ACCESS_KEY_ID }}
-          SUPABASE_S3_SECRET_ACCESS_KEY: ${{ secrets.SUPABASE_S3_SECRET_ACCESS_KEY }}
-          SUPABASE_S3_ENDPOINT: ${{ secrets.SUPABASE_S3_ENDPOINT }}
-          SUPABASE_S3_REGION: ${{ secrets.SUPABASE_S3_REGION }}
-          SUPABASE_STORAGE_BUCKET: ${{ secrets.SUPABASE_STORAGE_BUCKET }}
-          SUPABASE_STORAGE_PREFIX: ${{ env.SUPABASE_STORAGE_PREFIX }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-
-          WIN_PREFIX="${SUPABASE_STORAGE_PREFIX%/}/win"
-
-          vpk download s3 \
-            --bucket "$SUPABASE_STORAGE_BUCKET" \
-            --endpoint "$SUPABASE_S3_ENDPOINT" \
-            --region "$SUPABASE_S3_REGION" \
-            --keyId "$SUPABASE_S3_ACCESS_KEY_ID" \
-            --secret "$SUPABASE_S3_SECRET_ACCESS_KEY" \
+          vpk download github \
+            --repoUrl "https://github.com/${{ github.repository }}" \
+            --token "$GITHUB_TOKEN" \
             --channel win \
-            --prefix "$WIN_PREFIX" \
-            --outputDir "$RELEASE_DIR" \
-            || echo "No previous Velopack release found in Supabase; creating the first one."
+            --outputDir "$RELEASE_DIR"
 
           vpk pack \
             --packId "$APP_ID" \
@@ -138,86 +107,22 @@ jobs:
             --channel win \
             --outputDir "$RELEASE_DIR"
 
-          vpk upload s3 \
-            --bucket "$SUPABASE_STORAGE_BUCKET" \
-            --endpoint "$SUPABASE_S3_ENDPOINT" \
-            --region "$SUPABASE_S3_REGION" \
-            --keyId "$SUPABASE_S3_ACCESS_KEY_ID" \
-            --secret "$SUPABASE_S3_SECRET_ACCESS_KEY" \
+          vpk upload github \
+            --repoUrl "https://github.com/${{ github.repository }}" \
+            --token "$GITHUB_TOKEN" \
+            --publish \
+            --merge \
             --channel win \
-            --prefix "$WIN_PREFIX" \
             --outputDir "$RELEASE_DIR" \
-            --keepMaxReleases 10
+            --releaseName "$APP_TITLE ${{ steps.version.outputs.value }}" \
+            --tag "v${{ steps.version.outputs.value }}" \
+            --targetCommitish "${{ github.sha }}"
 
-      - name: Upload portable Windows bundle to Supabase
-        shell: bash
+      - name: Upload portable Windows bundle
+        shell: pwsh
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.SUPABASE_S3_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SUPABASE_S3_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.SUPABASE_S3_REGION }}
-          SUPABASE_S3_ENDPOINT: ${{ secrets.SUPABASE_S3_ENDPOINT }}
-          SUPABASE_STORAGE_BUCKET: ${{ secrets.SUPABASE_STORAGE_BUCKET }}
-          SUPABASE_STORAGE_PREFIX: ${{ env.SUPABASE_STORAGE_PREFIX }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.value }}
           ASSET_PATH: ${{ steps.portable_win.outputs.asset_path }}
         run: |
-          set -euo pipefail
-
-          OBJECT_KEY="${SUPABASE_STORAGE_PREFIX%/}/portable/${{ env.APP_TITLE }}-${VERSION}-${{ env.WINDOWS_RUNTIME }}-portable.zip"
-          aws s3 cp "$ASSET_PATH" "s3://${SUPABASE_STORAGE_BUCKET}/${OBJECT_KEY}" \
-            --endpoint-url "$SUPABASE_S3_ENDPOINT"
-
-  linux-portable:
-    needs: release
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore
-        run: dotnet restore ${{ env.PROJECT_PATH }}
-
-      - name: Publish app
-        env:
-          VERSION: ${{ needs.release.outputs.version }}
-        run: >
-          dotnet publish ${{ env.PROJECT_PATH }}
-          -c Release
-          -r ${{ env.LINUX_RUNTIME }}
-          --self-contained true
-          --no-restore
-          -p:Version=$VERSION
-          -o artifacts/publish/${{ env.LINUX_RUNTIME }}
-
-      - name: Archive portable Linux bundle
-        id: portable_linux
-        env:
-          VERSION: ${{ needs.release.outputs.version }}
-        run: |
-          mkdir -p "${{ env.PORTABLE_DIR }}"
-          asset_path="${{ env.PORTABLE_DIR }}/${{ env.APP_TITLE }}-$VERSION-${{ env.LINUX_RUNTIME }}-portable.tar.gz"
-          tar -C "artifacts/publish/${{ env.LINUX_RUNTIME }}" -czf "$asset_path" .
-          echo "asset_path=$asset_path" >> "$GITHUB_OUTPUT"
-
-      - name: Upload portable Linux bundle to Supabase
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.SUPABASE_S3_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SUPABASE_S3_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.SUPABASE_S3_REGION }}
-          SUPABASE_S3_ENDPOINT: ${{ secrets.SUPABASE_S3_ENDPOINT }}
-          SUPABASE_STORAGE_BUCKET: ${{ secrets.SUPABASE_STORAGE_BUCKET }}
-          SUPABASE_STORAGE_PREFIX: ${{ env.SUPABASE_STORAGE_PREFIX }}
-          VERSION: ${{ needs.release.outputs.version }}
-          ASSET_PATH: ${{ steps.portable_linux.outputs.asset_path }}
-        run: |
-          set -euo pipefail
-
-          OBJECT_KEY="${SUPABASE_STORAGE_PREFIX%/}/portable/${{ env.APP_TITLE }}-${VERSION}-${{ env.LINUX_RUNTIME }}-portable.tar.gz"
-          aws s3 cp "$ASSET_PATH" "s3://${SUPABASE_STORAGE_BUCKET}/${OBJECT_KEY}" \
-            --endpoint-url "$SUPABASE_S3_ENDPOINT"
+          gh release upload "v$env:VERSION" "$env:ASSET_PATH" --clobber

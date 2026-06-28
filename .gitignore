@@ -9,3 +9,4 @@ Lemon/
 *.user
 *.suo
 *.swp
+.env
