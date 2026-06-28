@@ -50,7 +50,7 @@ jobs:
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Restore
-        run: dotnet restore ${{ env.PROJECT_PATH }}
+        run: dotnet restore ${{ env.PROJECT_PATH }} -r ${{ env.WINDOWS_RUNTIME }}
 
       - name: Publish app
         run: >
