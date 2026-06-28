@@ -11,14 +11,7 @@ env:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            runtime: linux-x64
-
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
@@ -35,11 +28,11 @@ jobs:
       - name: Build
         run: dotnet build Zenit.sln -c Release --no-restore
 
-      - name: Publish ${{ matrix.runtime }}
+      - name: Publish win-x64
         run: >
           dotnet publish Zenit.csproj
           -c Release
-          -r ${{ matrix.runtime }}
+          -r win-x64
           --self-contained true
           --no-restore
-          -o artifacts/publish/${{ matrix.runtime }}
+          -o artifacts/publish/win-x64
